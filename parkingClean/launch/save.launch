@@ -1,0 +1,116 @@
+<launch>
+<!--     开启激光-->
+<!--    <include file="$(find urg_node)/launch/urg_lidar.launch">
+         <arg name="serial_port" value="/dev/urg"/>
+         <arg name="ip_address" value=""/>
+         <arg name="serial_baud" value="115200"/>
+         <arg name="out_frame_id" value="scan"/>
+         <arg name="calibrate_time" value="true"/>
+         <arg name="publish_intensity" value="false"/>
+         <arg name="publish_multiecho" value="false"/>
+         <arg name="angle_min" value="-2.09333"/>
+         <arg name="angle_max" value="2.09333"/>
+         <arg name="scan_topic" value="/scan"/>
+    </include>-->
+
+    <arg name="front_min_dist"         default="0.5"/>
+    <arg name="right_min_dist"         default="0.3"/>
+    <arg name="right_max_dist"         default="2"/>
+    <arg name="front_clean_dist"       default="0.3"/>
+
+    <node pkg="parkingClean" type="parkingClean_node" name="parkingClean_node" output="screen">
+
+      <param name="front_min_dist"           value="$(arg front_min_dist)"/>
+      <param name="right_min_dist"            value="$(arg right_min_dist)"/>
+      <param name="right_max_dist"          value="$(arg right_max_dist)"/>
+      <param name="front_clean_dist"        value="$(arg front_clean_dist)"/>
+    </node>
+
+<!--    开启机器人驱动-->
+<!--   <include file="$(find qfeel_xbot)/launch/qfeel_xbot.launch">
+    </include>-->
+<!--<node pkg="tf" type="static_transform_publisher" name="map_nav_broadcaster_pepperl" args="-0.125 0 0.28 0 0 3.14  base_link scan 100" />-->
+
+<!--<node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />-->
+<!--    开启cartographer-->
+<!--    <arg name="configuration_basename" default="turtlebot_urg_lidar_2d.lua"/>
+    <arg name="configuration_directory" default="$(find cartographer_launch)/configuration_files"/>
+    <arg name="imu_in_topic" default="/mobile_base/sensors/imu_data_raw"/>
+    <arg name="imu_transform" default="true"/>
+    <arg name="carto_odom_topic" default="/qfeel/odom"/>
+
+    <include file="$(find cartographer_launch)/launch/include/cartographer.launch.xml">
+        <arg name="configuration_basename" value="$(arg configuration_basename)"/>
+        <arg name="configuration_directory" value="$(arg configuration_directory)"/>
+        <arg name="imu_in_topic" value="$(arg imu_in_topic)"/>
+        <arg name="imu_transform" value="$(arg imu_transform)"/>
+        <arg name="carto_odom_topic" value="$(arg carto_odom_topic)"/>
+    </include>-->
+
+<!--    <include file="$(find cartographer_launch)/launch/include/turtlebot.launch">
+
+    <arg name="configuration_basename" value="turtlebot_urg_lidar_2d.lua"/>
+    <arg name="configuration_directory" value="$(find cartographer_turtlebot)/configuration_files"/>
+    <arg name="imu_in_topic" value="/qfeel/imu"/>
+    <arg name="imu_transform" value="true"/>
+
+    <arg name="use_3d_sensor" value="false"/>
+    <arg name="use_urg_lidar" value="true"/>
+
+    <arg name="urg_lidar_scan_topic" value="scan"/>
+    <arg name="urg_lidar_out_frame" value="laserscan_optical_frame"/>
+    <arg name="urg_lidar_serialport" value="/dev/urg"/>
+    <arg name="urg_lidar_angle_min" value="-1.047197551"/>
+    <arg name="urg_lidar_angle_max" value="1.047197551"/>
+
+    </include>-->
+
+<!--    开启cartographer-->
+<!--<param name="urg_node/frame_id" value="plate_top_link" />
+  <node name="urg_node" pkg="urg_node" type="urg_node" />
+<node name="rviz" pkg="rviz" type="rviz" required="true"
+   args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />
+
+  <include file="$(find cartographer_turtlebot)/launch/turtlebot.launch">
+    <arg name="configuration_basename" value="turtlebot_urg_lidar_2d.lua" />
+  </include>-->
+
+
+    <!--    开启清扫包-->
+ <!--   <node pkg="parking_clean" type="demo_node" name="demo_node"  output="screen">
+
+    </node>-->
+    <!--    开启按键包-->
+    <node pkg="client" type="client_node" name="client_node"  output="screen">
+     </node>
+
+<!--<include file="$(find movebaselaunch)/launch/includes/move_base.launch.xml"/>-->
+<!--<include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>-->
+
+<!--      <param name="/use_sim_time" value="true" />
+    <node name="cartographer_node" pkg="cartographer_ros"
+          type="cartographer_node" args="
+              -configuration_directory $(find cartographer_ros)/configuration_files
+              -configuration_basename revo_ldsc.lua"
+          output="screen">
+        <remap from="/scan" to="/scan" />
+
+      </node>
+      <node name="rviz" pkg="rviz" type="rviz" required="true"
+          args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />-->
+
+
+
+</launch>
+
+
+
+
+
+
+
+
+
+
+

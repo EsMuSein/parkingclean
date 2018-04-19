@@ -1,0 +1,53 @@
+<launch>
+<!--     开启激光-->
+<!-- urg激光雷达相关配置 -->
+<arg name="urg_lidar_scan_topic" default="scan"/>
+<arg name="urg_lidar_out_frame"  default="laserscan_link"/>
+<arg name="urg_lidar_serialport" default="/dev/urg"/>
+<arg name="urg_lidar_angle_min"  default="-2.09333"/>
+<arg name="urg_lidar_angle_max"  default="2.09333"/>
+
+
+<include file="$(find robot_platform)/launch/omnirobot.launch">
+    <arg name="urg_lidar_scan_topic" value="$(arg urg_lidar_scan_topic)"/>
+    <arg name="urg_lidar_serialport" value="$(arg urg_lidar_serialport)"/>
+    <arg name="urg_lidar_angle_min" value="$(arg urg_lidar_angle_min)"/>
+    <arg name="urg_lidar_angle_max" value="$(arg urg_lidar_angle_max)"/>
+    <arg name="urg_lidar_out_frame" value="$(arg urg_lidar_out_frame)"/>
+</include>
+
+<!-- 开启清扫节点  -->
+    <arg name="front_min_dist"         default="0.3"/>
+    <arg name="right_min_dist"         default="0.3"/>
+    <arg name="right_max_dist"         default="2"/>
+    <arg name="front_clean_dist"       default="0.3"/>
+
+    <node pkg="parkingClean" type="parkingClean_node" name="parkingClean_node" output="screen">
+      <param name="front_min_dist"           value="$(arg front_min_dist)"/>
+      <param name="right_min_dist"            value="$(arg right_min_dist)"/>
+      <param name="right_max_dist"          value="$(arg right_max_dist)"/>
+      <param name="front_clean_dist"        value="$(arg front_clean_dist)"/>
+    </node>
+<!--    <node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />-->
+
+<include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>
+
+
+<!--    开启按键包-->
+<node pkg="client" type="client_node" name="client_node"  output="screen"/>
+
+
+<include file="$(find slam_system)/launch/include/slam_system_learning.launch.xml">
+<!--        <arg name="agv_system_path" value="$(arg agv_system_path)"/>-->
+    <arg name="carto_odom_topic" value="odom"/>
+</include>
+
+
+<!-- move_base节点 -->
+<include file="$(find omnirobot_navigation)/launch/includes/move_base.launch.xml">
+<arg name="odom_frame_id"   value="odom"/>
+</include>
+
+
+</launch>

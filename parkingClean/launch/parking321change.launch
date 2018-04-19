@@ -1,0 +1,62 @@
+<launch>
+<!--     开启激光-->
+    <include file="$(find urg_node)/launch/urg_lidar.launch">
+         <arg name="serial_port" value="/dev/urg"/>
+         <arg name="ip_address" value=""/>
+         <arg name="serial_baud" value="115200"/>
+         <arg name="out_frame_id" value="scan"/>
+         <arg name="calibrate_time" value="true"/>
+         <arg name="publish_intensity" value="false"/>
+         <arg name="publish_multiecho" value="false"/>
+         <arg name="angle_min" value="-2.09333"/>
+         <arg name="angle_max" value="2.09333"/>
+         <arg name="scan_topic" value="/scan"/>
+    </include>
+
+
+<!-- 开启清扫节点  -->
+    <arg name="front_min_dist"         default="0.3"/>
+    <arg name="right_min_dist"         default="0.3"/>
+    <arg name="right_max_dist"         default="2"/>
+    <arg name="front_clean_dist"       default="0.3"/>
+
+    <node pkg="parkingClean" type="parkingClean_node" name="parkingClean_node" output="screen">
+      <param name="front_min_dist"           value="$(arg front_min_dist)"/>
+      <param name="right_min_dist"            value="$(arg right_min_dist)"/>
+      <param name="right_max_dist"          value="$(arg right_max_dist)"/>
+      <param name="front_clean_dist"        value="$(arg front_clean_dist)"/>
+    </node>
+
+<!--    开启机器人驱动-->
+   <include file="$(find qfeel_xbot)/launch/qfeel_xbot.launch"/>
+<!--    -->
+<node pkg="tf" type="static_transform_publisher" name="map_nav_broadcaster_pepperl" args="-0.125 0 0.28 0 0 3.14  base_link scan 100" />
+<!--<node pkg="tf" type="static_transform_publisher" name="map_nav_broadcaster_pepperl" args="0 0 0 0 0 0 /odom base_link 100" />-->
+<!--<node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />-->
+
+<!--    开启cartographer-->
+    <arg name="configuration_basename" default="turtlebot_urg_lidar_2d.lua"/>
+    <arg name="configuration_directory" default="$(find cartographer_launch)/configuration_files"/>
+    <arg name="imu_in_topic" default="/mobile_base/sensors/imu_data_raw"/>
+    <arg name="imu_transform" default="true"/>
+    <arg name="carto_odom_topic" default="/qfeel/odom"/>
+
+    <include file="$(find cartographer_launch)/launch/include/cartographer.launch.xml">
+        <arg name="configuration_basename" value="$(arg configuration_basename)"/>
+        <arg name="configuration_directory" value="$(arg configuration_directory)"/>
+        <arg name="imu_in_topic" value="$(arg imu_in_topic)"/>
+        <arg name="imu_transform" value="$(arg imu_transform)"/>
+        <arg name="carto_odom_topic" value="$(arg carto_odom_topic)"/>
+    </include>
+
+
+    <!--    开启按键包-->
+    <node pkg="client" type="client_node" name="client_node"  output="screen"/>
+
+<include file="$(find movebaselaunch)/launch/includes/move_base.launch.xml"/>
+<include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>
+
+<include file="$(find robot_description)/launch/robotlaunch.launch"/>
+
+</launch>

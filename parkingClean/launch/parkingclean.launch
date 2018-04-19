@@ -1,0 +1,32 @@
+<launch>
+
+
+<!-- 开启清扫节点  -->
+    <arg name="front_min_dist"         default="0.3"/>
+    <arg name="right_min_dist"         default="0.3"/>
+    <arg name="right_max_dist"         default="1"/>
+    <arg name="front_clean_dist"       default="0.3"/>
+
+    <node pkg="parkingClean" type="parkingClean_node" name="parkingClean_node" output="screen">
+      <param name="front_min_dist"           value="$(arg front_min_dist)"/>
+      <param name="right_min_dist"            value="$(arg right_min_dist)"/>
+      <param name="right_max_dist"          value="$(arg right_max_dist)"/>
+      <param name="front_clean_dist"        value="$(arg front_clean_dist)"/>
+    </node>
+
+<!--    开启按键包-->
+<node pkg="client" type="client_node" name="client_node"  output="screen"/>
+
+
+<!--<include file="$(find slam_system)/launch/include/slam_system_learning.launch.xml">
+    <arg name="carto_odom_topic" value="odom"/>
+</include>-->
+
+
+<!-- move_base节点 -->
+<!--<include file="$(find omnirobot_navigation)/launch/includes/move_base.launch.xml">
+<arg name="odom_frame_id"   value="odom"/>
+</include>-->
+
+
+</launch>
